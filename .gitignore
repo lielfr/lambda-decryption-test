@@ -1,5 +1,4 @@
 private.pem
 public.pem
 .DS_Store
-lambda.zip
-
+*_lambda.zip
