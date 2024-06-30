@@ -25,7 +25,7 @@ resource "aws_s3_bucket" "target" {
 }
 
 resource "aws_secretsmanager_secret" "private-key" {
-  name = "decryption-lambdas-test-private-key-${var.unique_identifier}"
+  name = "decryption-lambdas-test-private-key-3-${var.unique_identifier}"
 }
 
 resource "aws_secretsmanager_secret_version" "private-key" {
@@ -94,7 +94,7 @@ resource "aws_iam_role" "iam_for_lambda" {
 resource "aws_lambda_function" "s3-lambda" {
   filename         = var.lambda_zip
   runtime          = "provided.al2023"
-  function_name    = "decryption-lambda-test-${var.unique_identifier}"
+  function_name    = "decryption-lambda-test2-${var.unique_identifier}"
   role             = aws_iam_role.iam_for_lambda.arn
   handler          = "bootstrap.App"
   architectures    = ["arm64"]
