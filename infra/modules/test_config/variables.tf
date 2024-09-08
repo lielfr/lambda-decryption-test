@@ -18,3 +18,13 @@ variable "memory_size" {
   type    = number
   default = 128
 }
+
+variable "runtime" {
+  type    = string
+  default = "provided.al2023"
+}
+
+variable "handler" {
+  type    = string
+  default = "bootstrap.App"
+}

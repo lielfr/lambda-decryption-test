@@ -1,0 +1,15 @@
+[project]
+name = "python-lambda"
+version = "0.1.0"
+description = "Decryption Lambda - Python version"
+requires-python = ">=3.12"
+dependencies = [
+    "aws-lambda-powertools>=2.43.1",
+    "boto3>=1.35.14",
+    "cryptography>=43.0.1",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "python-lsp-server[all]>=1.12.0",
+]
