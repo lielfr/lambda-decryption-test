@@ -25,14 +25,13 @@ async fn function_handler(event: LambdaEvent<S3Event>) -> Result<()> {
         let S3Entity { bucket, object, .. } = r.s3;
         info!("Got bucket: {bucket:?}, object: {object:?}, processing");
         let object_key = object.key.clone().ok_or(anyhow!("no key for {object:?}"))?;
+        let source_bucket_name = bucket
+            .name
+            .clone()
+            .ok_or(anyhow!("no bucket name for {:?}", bucket.clone()))?;
         let result = s3_client
             .get_object()
-            .bucket(
-                bucket
-                    .name
-                    .clone()
-                    .ok_or(anyhow!("no bucket name for {:?}", bucket.clone()))?,
-            )
+            .bucket(&source_bucket_name)
             .key(&object_key)
             .send()
             .await?;
@@ -50,6 +49,14 @@ async fn function_handler(event: LambdaEvent<S3Event>) -> Result<()> {
             .key(&object_key)
             .send()
             .await?;
+        info!("put target object in bucket, now deleting source");
+        s3_client
+            .delete_object()
+            .bucket(&source_bucket_name)
+            .key(&object_key)
+            .send()
+            .await?;
+
         info!("finished for {bucket:?}, object: {object:?}");
     }
     Ok(())
