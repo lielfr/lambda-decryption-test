@@ -69,6 +69,15 @@ resource "aws_iam_policy" "lambda_policy" {
           "${aws_s3_bucket.target.arn}/*"
         ]
       },
+      {
+        Action = [
+          "s3:DeleteObject"
+        ]
+        Effect = "Allow"
+        Resource = [
+          "${aws_s3_bucket.target.arn}/*"
+        ]
+      },
     ]
   })
 }

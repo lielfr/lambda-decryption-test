@@ -1,7 +1,10 @@
 #!/bin/zsh
 cd lambdas/python-lambda
 mkdir dist || true
-docker build -t python-lambda-builder .
-docker run --rm -v ./dist:/dist python-lambda-builder /app/docker_build.sh
-cd ../..
-mv lambdas/python-lambda/dist/lambda.zip ./python_lambda.zip
+uv export | uv pip install --target dist --python-platform aarch64-unknown-linux-gnu -r -
+cd dist
+cp ../main.py .
+zip -rq ../lambda.zip .
+cd ../../..
+rm -rf lambdas/python-lambda/dist
+mv lambdas/python-lambda/lambda.zip ./python_lambda.zip
