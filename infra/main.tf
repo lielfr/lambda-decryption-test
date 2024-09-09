@@ -31,3 +31,14 @@ module "python_lambda" {
   handler            = "main.lambda_handler"
   memory_size        = var.memory_size
 }
+
+module "jvm_lambda" {
+  source             = "./modules/test_config"
+  lambda_zip         = "../jvm_lambda.zip"
+  unique_identifier  = "lielfr-jvm-lambda-test"
+  source_bucket_name = "lambda-source-bucket-jvm"
+  target_bucket_name = "lambda-target-bucket-jvm"
+  runtime            = "java21"
+  handler            = "com.example.Handler"
+  memory_size        = var.memory_size
+}
