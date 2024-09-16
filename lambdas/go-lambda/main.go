@@ -22,8 +22,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 )
 
-const SECRET_ENV = "SECRET"
-const TARGET_BUCKET_ENV = "TARGET_BUCKET"
+const SECRET_ENV = "PRIVATE_KEY_PATH"
+const TARGET_BUCKET_ENV = "RESULT_BUCKET_PATH"
 
 func HandleRequest(ctx context.Context, event *events.S3Event) error {
 	log.Println("starting Go lambda")
@@ -40,7 +40,7 @@ func HandleRequest(ctx context.Context, event *events.S3Event) error {
 		return err
 	}
 	privKeyPem, _ := pem.Decode([]byte(*privKeyResult.SecretString))
-	privKey, err := x509.ParsePKCS1PrivateKey(privKeyPem.Bytes)
+	privKey, err := x509.ParsePKCS8PrivateKey(privKeyPem.Bytes)
 	if err != nil {
 		log.Printf("failed to parse private key: %s\n", err)
 		return err
@@ -66,7 +66,7 @@ func HandleRequest(ctx context.Context, event *events.S3Event) error {
 		}
 		hash := sha1.New()
 
-		decryptedObj, err := rsa.DecryptOAEP(hash, rand.Reader, privKey, objBody.Bytes(), nil)
+		decryptedObj, err := rsa.DecryptOAEP(hash, rand.Reader, privKey.(*rsa.PrivateKey), objBody.Bytes(), nil)
 		if err != nil {
 			log.Printf("could not decrypt object: %s\n", err)
 			continue

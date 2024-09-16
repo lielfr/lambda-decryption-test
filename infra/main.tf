@@ -42,3 +42,13 @@ module "jvm_lambda" {
   handler            = "com.example.Handler"
   memory_size        = var.memory_size
 }
+
+module "go_lambda" {
+  source             = "./modules/test_config"
+  lambda_zip         = "../go_lambda.zip"
+  unique_identifier  = "lielfr-go-lambda-test"
+  source_bucket_name = "lambda-source-bucket-go"
+  target_bucket_name = "lambda-target-bucket-go"
+  handler            = "bootstrap"
+  memory_size        = var.memory_size
+}

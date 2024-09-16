@@ -112,6 +112,7 @@ resource "aws_s3_object" "function_zip" {
   bucket = aws_s3_bucket.functions_bucket.bucket
   key    = "lambda.zip"
   source = var.lambda_zip
+  etag   = filemd5(var.lambda_zip)
 }
 
 resource "aws_lambda_function" "s3-lambda" {
