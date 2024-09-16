@@ -36,5 +36,10 @@ rust-lambda:
 	zip -r rust_lambda.zip bootstrap; \
 	rm bootstrap
 
+nodejs-lambda:
+	cd lambdas/nodejs-lambda; \
+	zip -r ../../nodejs_lambda.zip index.mjs; \
+	cd ../..
+
 all:
 	go-lambda java-lambda jvm-lambda python-lambda rust-lambda

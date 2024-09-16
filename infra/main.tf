@@ -52,3 +52,14 @@ module "go_lambda" {
   handler            = "bootstrap"
   memory_size        = var.memory_size
 }
+
+module "nodejs_lambda" {
+  source             = "./modules/test_config"
+  lambda_zip         = "../nodejs_lambda.zip"
+  unique_identifier  = "lielfr-nodejs-lambda-test"
+  source_bucket_name = "lambda-source-bucket-nodejs"
+  target_bucket_name = "lambda-target-bucket-nodejs"
+  handler            = "index.handler"
+  memory_size        = var.memory_size
+  runtime            = "nodejs20.x"
+}
