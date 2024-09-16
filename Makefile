@@ -5,7 +5,6 @@ go-lambda:
 	rm bootstrap; \
 	cd ../..
 
-
 java-lambda:
 	cd lambdas/java-lambda; \
 	./gradlew clean buildNativeLambda; \
