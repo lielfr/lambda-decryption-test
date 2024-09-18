@@ -7,8 +7,12 @@ edition = "2021"
 anyhow = "1.0.86"
 aws-config = { version = "1.5.3", features = ["behavior-version-latest"] }
 aws-lc-rs = "1.8.0"
+aws-sdk-cloudwatch = "1.48.0"
 aws-sdk-s3 = "1.38.0"
 base64 = "0.22.1"
 clap = { version = "4.5.8", features = ["derive"] }
 rand = "0.8.5"
 tokio = { version = "1.38.0", features = ["full"] }
+
+[[bin]]
+name = "generate_upload_data"

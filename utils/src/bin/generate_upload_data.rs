@@ -1,7 +1,5 @@
-use anyhow::{anyhow, bail, Result};
-use aws_lc_rs::rsa::{
-    OaepPublicEncryptingKey, PrivateDecryptingKey, OAEP_SHA1_MGF1SHA1, OAEP_SHA256_MGF1SHA256,
-};
+use anyhow::{anyhow, bail, Context, Result};
+use aws_lc_rs::rsa::{OaepPublicEncryptingKey, PrivateDecryptingKey, OAEP_SHA1_MGF1SHA1};
 use base64::Engine;
 use clap::Parser;
 use rand::prelude::*;
@@ -85,14 +83,15 @@ async fn main() -> Result<()> {
 
     for sample_num in 0..args.num_samples {
         println!("Generating sample #{sample_num}, sample length = #{sample_length}");
+        let encrypted_file_name = format!("sample_{sample_num}_raw");
+        let raw_file_name = format!("sample_{sample_num}_encrypted");
 
         let sample = gen_sample(Some(sample_length));
-        tokio::fs::write(format!("sample_{sample_num}_raw"), sample.as_slice()).await?;
+        tokio::fs::write(&raw_file_name, sample.as_slice()).await?;
 
         println!("encrypting and uploading to s3");
 
         let encrypted_sample = encrypt_file(sample.as_slice(), private_key.as_slice())?;
-        dbg!(&encrypted_sample);
         tokio::fs::write(
             format!("sample_{sample_num}_encrypted"),
             encrypted_sample.as_slice(),
@@ -108,6 +107,13 @@ async fn main() -> Result<()> {
             )
             .await?;
         }
+
+        tokio::fs::remove_file(&raw_file_name)
+            .await
+            .context("could not delete raw file")?;
+        tokio::fs::remove_file(&encrypted_file_name)
+            .await
+            .context("could not delete encrypted file")?;
 
         sample_length *= 2;
     }
