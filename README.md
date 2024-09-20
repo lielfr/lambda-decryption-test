@@ -18,7 +18,7 @@ You'll need to first build all of the lambdas. For this, you'll need:
 10. pnpm (Node.js alternative package manager) - optional but recommended
 11. OpenSSL
 
-First, you'll need to generate a RSA key pair. You can do it with OpenSSL:
+You'll need to generate a RSA key pair. You can do it with OpenSSL:
 
 1. `openssl genrsa -out private.pem 2048` - this will generate the private key
 2. `openssl rsa -in private.pem -pubout -out public.pem` - generate public key
