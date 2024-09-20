@@ -7,9 +7,11 @@ edition = "2021"
 anyhow = "1.0.86"
 aws-config = { version = "1.5.3", features = ["behavior-version-latest"] }
 aws-lc-rs = "1.8.0"
-aws-sdk-cloudwatch = "1.48.0"
+aws-sdk-cloudwatchlogs = "1.49.0"
 aws-sdk-s3 = "1.38.0"
+aws-smithy-types-convert = { version = "0.60.8", features = ["convert-chrono"] }
 base64 = "0.22.1"
+chrono = "0.4.38"
 clap = { version = "4.5.8", features = ["derive"] }
 rand = "0.8.5"
 serde = { version = "1.0.210", features = ["derive"] }

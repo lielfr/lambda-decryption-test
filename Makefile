@@ -19,6 +19,8 @@ jvm-lambda:
 
 python-lambda:
 	cd lambdas/python-lambda; \
+	rm -rf .venv || true ;\
+	uv venv ;\
 	mkdir dist || true; \
 	uv export | uv pip install --target dist --python-platform aarch64-unknown-linux-gnu -r -; \
 	cd dist; \
