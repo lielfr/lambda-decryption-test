@@ -16,6 +16,12 @@ You'll need to first build all of the lambdas. For this, you'll need:
 8. uv (Python package manager)
 9. Node.js
 10. pnpm (Node.js alternative package manager) - optional but recommended
+11. OpenSSL
+
+First, you'll need to generate a RSA key pair. You can do it with OpenSSL:
+
+1. `openssl genrsa -out private.pem 2048` - this will generate the private key
+2. `openssl rsa -in private.pem -pubout -out public.pem` - generate public key
 
 You can build everything in one go by running `make`, or you can pick your desired target(s). See `Makefile` for targets list.
 
