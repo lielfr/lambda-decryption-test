@@ -14,6 +14,8 @@ You'll need to first build all of the lambdas. For this, you'll need:
 6. Docker (or alternatives like Podman)
 7. Python 3.12
 8. uv (Python package manager)
+9. Node.js
+10. pnpm (Node.js alternative package manager) - optional but recommended
 
 You can build everything in one go by running `make`, or you can pick your desired target(s). See `Makefile` for targets list.
 
