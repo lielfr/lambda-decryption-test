@@ -3,16 +3,17 @@ use std::time::Duration;
 use anyhow::{anyhow, bail, Context, Result};
 use aws_sdk_cloudwatchlogs::types::QueryStatus;
 use chrono::{TimeDelta, Utc};
+use tabled::Tabled;
 
 use crate::tfstate_parser::LambdaFunctionName;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Tabled)]
 pub struct LambdaFunctionStatistics {
+    pub function_name: String,
     pub duration: f32,
     pub billed_duration: f32,
     pub memory_set: f32,
     pub memory_used: f32,
-    pub function_name: String,
 }
 
 const CW_QUERY: &str = "filter @type = \"REPORT\"

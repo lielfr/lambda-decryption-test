@@ -1,5 +1,9 @@
 use anyhow::{Context, Result};
 use clap::Parser;
+use tabled::{
+    settings::{object::Columns, Color, Style},
+    Table,
+};
 use utils::{
     cloudwatch_logs::get_lambda_statistics,
     tfstate_parser::{get_lambda_function_names, TerraformState},
@@ -25,7 +29,13 @@ async fn main() -> Result<()> {
     let lambda_function_names: Vec<_> = get_lambda_function_names(&tf_state);
 
     let query_results = get_lambda_statistics(&lambda_function_names).await?;
-    dbg!(query_results);
+
+    let mut table = Table::new(query_results);
+    table
+        .with(Style::psql())
+        .modify(Columns::single(0), Color::FG_RED)
+        .modify(Columns::new(1..), Color::FG_GREEN);
+    println!("Results:\n{table}");
 
     Ok(())
 }
