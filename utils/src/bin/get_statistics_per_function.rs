@@ -29,7 +29,8 @@ async fn main() -> Result<()> {
     let lambda_function_names: Vec<_> = get_lambda_function_names(&tf_state);
 
     let mut query_results = get_lambda_statistics(&lambda_function_names).await?;
-    query_results.sort_by_key(|res| res.function_name.clone());
+    #[allow(clippy::cast_possible_truncation)]
+    query_results.sort_by_key(|res| (res.function_name.clone(), res.memory_set as i64));
 
     let mut table = Table::new(query_results);
     table

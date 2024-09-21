@@ -10,6 +10,7 @@ use crate::tfstate_parser::LambdaFunctionName;
 #[derive(Debug, Clone, Tabled)]
 pub struct LambdaFunctionStatistics {
     pub function_name: String,
+    pub init_duration: f32,
     pub duration: f32,
     pub billed_duration: f32,
     pub memory_set: f32,
@@ -17,13 +18,14 @@ pub struct LambdaFunctionStatistics {
 }
 
 const CW_QUERY: &str = "filter @type = \"REPORT\"
-  | fields @timestamp, coalesce(@duration, recsord.metrics.durationMs) as DurationInMS, coalesce(@billedDuration, record.metrics.billedDurationMs) as BilledDurationInMS, coalesce(@memorySize/1000000, record.metrics.memorySizeMB) as MemorySetInMB, coalesce(@maxMemoryUsed/1000000, record.metrics.maxMemoryUsedMB) as MemoryUsedInMB, @log
-  | stats avg(DurationInMS) as avgDurationMs, avg(BilledDurationInMS) as avgBilledDurationMs, avg(MemoryUsedInMB) as avgMemoryMB by @log, MemorySetInMB
+  | fields @timestamp, coalesce(@duration, recsord.metrics.durationMs) as DurationInMS, coalesce(@billedDuration, record.metrics.billedDurationMs) as BilledDurationInMS, coalesce(@memorySize/1000000, record.metrics.memorySizeMB) as MemorySetInMB, coalesce(@maxMemoryUsed/1000000, record.metrics.maxMemoryUsedMB) as MemoryUsedInMB, @log, coalesce(@initDuration, record.metrics.billedDurationMs) as initDurationInMS
+  | stats avg(initDurationInMS) as avgInitDurationMs, avg(DurationInMS) as avgDurationMs, avg(BilledDurationInMS) as avgBilledDurationMs, avg(MemoryUsedInMB) as avgMemoryMB by @log, MemorySetInMB
   | sort by timestamp asc
   | limit 100";
 
 /// # Errors
 /// As this calls the AWS SDK, any error that could stem from it can be thrown. Some time related errors may also occur, although they should not.
+#[allow(clippy::too_many_lines)]
 pub async fn get_lambda_statistics<'a>(
     function_names: &Vec<LambdaFunctionName<'a>>,
 ) -> Result<Vec<LambdaFunctionStatistics>> {
@@ -105,6 +107,7 @@ pub async fn get_lambda_statistics<'a>(
         let mut billed_duration = None;
         let mut memory_set = None;
         let mut memory_used = None;
+        let mut init_duration = None;
 
         for field in r {
             if let Some(field_name) = field.field.clone() {
@@ -119,6 +122,9 @@ pub async fn get_lambda_statistics<'a>(
                     "MemorySetInMB" => {
                         memory_set = field.value().and_then(|v| v.parse::<f32>().ok());
                     }
+                    "avgInitDurationMs" => {
+                        init_duration = field.value().and_then(|v| v.parse::<f32>().ok());
+                    }
                     _ => {}
                 }
             }
@@ -128,13 +134,15 @@ pub async fn get_lambda_statistics<'a>(
         let billed_duration = billed_duration?;
         let memory_set = memory_set?;
         let memory_used = memory_used?;
+        let init_duration = init_duration?;
 
         Some(LambdaFunctionStatistics {
+            function_name,
+            init_duration,
             duration,
             billed_duration,
             memory_set,
             memory_used,
-            function_name,
         })
     });
 
