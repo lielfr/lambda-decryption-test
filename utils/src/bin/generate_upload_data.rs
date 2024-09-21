@@ -58,7 +58,7 @@ async fn main() -> Result<()> {
     let mut sample_length = 10usize;
 
     for sample_num in 0..args.num_samples {
-        println!("Generating sample #{sample_num}, sample length = #{sample_length}");
+        println!("Generating sample #{sample_num}, sample length = {sample_length}");
         let encrypted_file_name = format!("sample_{sample_num}_encrypted");
         let raw_file_name = format!("sample_{sample_num}_raw");
 
@@ -71,7 +71,7 @@ async fn main() -> Result<()> {
         tokio::fs::write(&encrypted_file_name, encrypted_sample.as_slice()).await?;
 
         for bucket in &args.target_buckets {
-            println!("uploading sample to #{bucket}");
+            println!("uploading sample to {bucket}");
             upload_encrypted_to_s3(
                 encrypted_sample.as_slice(),
                 bucket.as_str(),
@@ -88,7 +88,7 @@ async fn main() -> Result<()> {
             .context("could not delete encrypted file")?;
 
         sample_length *= 2;
-        sample_length = sample_length.max(1024 * 1024 * 1024);
+        sample_length = sample_length.min(1024 * 1024 * 1024);
     }
 
     Ok(())

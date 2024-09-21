@@ -20,7 +20,7 @@ const CW_QUERY: &str = "filter @type = \"REPORT\"
   | fields @timestamp, coalesce(@duration, recsord.metrics.durationMs) as DurationInMS, coalesce(@billedDuration, record.metrics.billedDurationMs) as BilledDurationInMS, coalesce(@memorySize/1000000, record.metrics.memorySizeMB) as MemorySetInMB, coalesce(@maxMemoryUsed/1000000, record.metrics.maxMemoryUsedMB) as MemoryUsedInMB, @log
   | stats avg(DurationInMS) as avgDurationMs, avg(BilledDurationInMS) as avgBilledDurationMs, avg(MemoryUsedInMB) as avgMemoryMB by @log, MemorySetInMB
   | sort by timestamp asc
-  | limit 10";
+  | limit 100";
 
 /// # Errors
 /// As this calls the AWS SDK, any error that could stem from it can be thrown. Some time related errors may also occur, although they should not.
