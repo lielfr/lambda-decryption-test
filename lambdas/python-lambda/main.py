@@ -48,5 +48,8 @@ def lambda_handler(event: dict, context: LambdaContext):
                 Bucket=RESULT_BUCKET_PATH_ENV,
                 Key=key
             )
+            logger.info('deleting source object')
+            s3.delete_object(Bucket=bucket, Key=key)
+            logger.info('finished')
         except Exception as e:
             logger.error(f'Error trying to process record: {e}')

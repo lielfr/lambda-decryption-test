@@ -59,8 +59,8 @@ async fn main() -> Result<()> {
 
     for sample_num in 0..args.num_samples {
         println!("Generating sample #{sample_num}, sample length = #{sample_length}");
-        let encrypted_file_name = format!("sample_{sample_num}_raw");
-        let raw_file_name = format!("sample_{sample_num}_encrypted");
+        let encrypted_file_name = format!("sample_{sample_num}_encrypted");
+        let raw_file_name = format!("sample_{sample_num}_raw");
 
         let sample = gen_sample(Some(sample_length));
         tokio::fs::write(&raw_file_name, sample.as_slice()).await?;
@@ -68,11 +68,7 @@ async fn main() -> Result<()> {
         println!("encrypting and uploading to s3");
 
         let encrypted_sample = encrypt_file(sample.as_slice(), private_key.as_slice())?;
-        tokio::fs::write(
-            format!("sample_{sample_num}_encrypted"),
-            encrypted_sample.as_slice(),
-        )
-        .await?;
+        tokio::fs::write(&encrypted_file_name, encrypted_sample.as_slice()).await?;
 
         for bucket in &args.target_buckets {
             println!("uploading sample to #{bucket}");
