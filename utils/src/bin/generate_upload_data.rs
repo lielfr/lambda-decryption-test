@@ -88,6 +88,7 @@ async fn main() -> Result<()> {
             .context("could not delete encrypted file")?;
 
         sample_length *= 2;
+        sample_length = sample_length.max(1024 * 1024 * 1024);
     }
 
     Ok(())
