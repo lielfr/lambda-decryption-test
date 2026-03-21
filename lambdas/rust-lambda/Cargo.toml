@@ -3,11 +3,11 @@ name = "rust-lambda"
 version = "0.1.0"
 edition = "2021"
 
-# Starting in Rust 1.62 you can use `cargo add` to add dependencies 
+# Starting in Rust 1.62 you can use `cargo add` to add dependencies
 # to your project.
 #
 # If you're using an older Rust version,
-# download cargo-edit(https://github.com/killercup/cargo-edit#installation) 
+# download cargo-edit(https://github.com/killercup/cargo-edit#installation)
 # to install the `add` subcommand.
 #
 # Running `cargo add DEPENDENCY_NAME` will
@@ -16,12 +16,11 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.86"
-aws-config = { version = "1.5.3", features = ["behavior-version-latest"] }
-aws-sdk-s3 = { version = "1.38.0", features = ["behavior-version-latest"] }
-aws-sdk-secretsmanager = "1.37.0"
-aws_lambda_events = { version = "0.15.1", default-features = false, features = ["s3"] }
+aws-config = { version = "1.8.15", features = ["behavior-version-latest"] }
+aws-sdk-s3 = { version = "1.127.0", features = ["behavior-version-latest"] }
+aws-sdk-secretsmanager = "1.103.0"
+aws_lambda_events = { version = "1.1.2", default-features = false, features = ["s3"] }
 
-lambda_runtime = "0.11.3"
+lambda_runtime = {version = "1.1.2", features = ["anyhow"]}
 openssl = { version = "0.10.64", features = ["vendored"] }
 tokio = { version = "1", features = ["macros"] }
-
