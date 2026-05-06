@@ -24,7 +24,7 @@ pub struct LambdaFunctionName<'a> {
     pub function_name: &'a str,
 }
 
-pub fn get_lambda_function_names(state: &TerraformState) -> Vec<LambdaFunctionName> {
+pub fn get_lambda_function_names(state: &TerraformState) -> Vec<LambdaFunctionName<'_>> {
     state
         .resources
         .iter()
